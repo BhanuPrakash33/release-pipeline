@@ -12,6 +12,22 @@ resource "aws_instance" "kubeadm" {
   tags = {
       Name = "kubeadm"
   }
+  
+ 
+
+provisioner "remote-exec" {
+  
+ connection {
+    type = "ssh"
+    host = aws_instance.kubeadm.public_ip
+    user = "ubuntu"
+    private_key = file("kubeadm-key")
+    }
+  
+    inline = [
+      "sudo ufw allow 22/tcp"
+      ]
+  }
 
 
 }
