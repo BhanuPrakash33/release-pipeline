@@ -1,0 +1,53 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+          - name: download key
+            shell: "sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg"
+          - name: making repository
+            shell: echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+          - name: installig curl
+            shell: "sudo apt-get install -y apt-transport-https ca-certificates curl && sudo apt-get update"
+          - name: install kubeadm
+            apt:
+              name: kubeadm
+              state: present
+          - name: Docker Installation
+            apt:
+              name: docker.io
+              state: present
+              update_cache: true
+
+          - name: Start the cluster
+            become: yes
+            become_user: root
+            command: "kubeadm init"
+
+          - name: create .kube directory
+            become: yes
+            become_user: ubuntu
+            file:
+              path: $HOME/.kube
+              state: directory
+              mode: 0777
+          - name: copy admin.conf to user's kube config
+            copy:
+              src: /etc/kubernetes/admin.conf
+              dest: /home/ubuntu/.kube/config
+              remote_src: yes
+              owner: ubuntu
+              mode: 0777
+          - name: install kubectl
+            apt:
+              name: kubectl=1.14.0-00
+              state: present
+              force: yes
+
+          - name: providing it network
+            shell: export KUBECONFIG=/etc/kubernetes/admin.conf && export kubever=$(kubectl version | base64 | tr -d '\n') && kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$kubever"
+            register: out
+          - name: inlisting the pods
+            shell: kubectl get pods --namespace=kube-system --kubeconfig=/home/ubuntu/.kube/config
+          - name: inlisting the the nodes
+            shell: kubectl get nodes --namespace=kube-system --kubeconfig=/home/ubuntu/.kube/config
+
