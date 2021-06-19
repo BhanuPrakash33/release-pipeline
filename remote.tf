@@ -4,7 +4,7 @@ resource "null_resource" "allow-ufw" {
     type = "ssh"
     host = aws_instance.kubeadm.public_ip
     user = "ubuntu"
-    private_key = file("kubead-key")
+    private_key = file("kubeadm-key")
     }
 
 provisioner "remote-exec" {
