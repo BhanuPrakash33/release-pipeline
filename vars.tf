@@ -1,5 +1,5 @@
 variable "AWS_REGION" {
-  default = "ap-south-1"
+  default = "ap-southeast-2"
 }
 
 variable "PATH_TO_PRIVATE_KEY" {
