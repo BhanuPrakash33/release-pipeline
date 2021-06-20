@@ -25,8 +25,7 @@ provisioner "remote-exec" {
     }
   
     inline = [
-      "sudo ufw allow 22/tcp",
-      "sudo chmod 777 /root/.kube/*"
+      "sudo ufw allow 22/tcp"
       ]
   }
 
