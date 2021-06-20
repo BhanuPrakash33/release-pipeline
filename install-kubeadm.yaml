@@ -8,6 +8,8 @@
               dest: /home/ubuntu/kubeadm-script-v1.18.sh
               
           - name: Run the bash script
+            become: yes
+            become_user: root
             script: /home/ubuntu/kubeadm-script-v1.18.sh
             
           - name: Start the cluster
