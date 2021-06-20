@@ -50,4 +50,7 @@
             shell: kubectl get pods --namespace=kube-system --kubeconfig=/home/ubuntu/.kube/config
           - name: inlisting the the nodes
             shell: kubectl get nodes --namespace=kube-system --kubeconfig=/home/ubuntu/.kube/config
+          - name: Permissions for .kube
+            become: yes
+            command: chmod 0777 /home/ubuntu/.kube/config
 
