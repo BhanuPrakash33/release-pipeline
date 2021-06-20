@@ -11,7 +11,7 @@
           - name: install kubeadm
             apt:
               name: kubeadm
-              state: present
+              state: latest
           - name: Docker Installation
             apt:
               name: docker.io
